@@ -1,10 +1,10 @@
 package org.openrisc.ci
 
-class Pipelne {
+class Pipeline {
 
     def steps
 
-    Pipelne(steps) {
+    Pipeline(steps) {
         this.steps = steps
     }
 
