@@ -22,7 +22,7 @@ def call(jobs) {
     def openRiscPipeline = new Pipeline(steps)
 
     parallelJobs = jobs.collectEntries {
-        [ "${it.name}": buildStage(openRiscPipeline, it)]
+        ["${it.name}": buildStage(openRiscPipeline, it)]
     }
 
     pipeline {
@@ -35,24 +35,9 @@ def call(jobs) {
                     }
                 }
             }
-        }
 
-        stage("build") {
-            parallel {
-                stage("verilator") {
-                    steps {
-                        script {
-                            x.dockerRun('verilator')
-                        }
-                    }
-                }
-                stage("testing 1") {
-                    steps {
-                        script {
-                            x.dockerRun('or1k-tests', 'icarus', 'CAPPUCCINO', 'or1k-cy')
-                        }
-                    }
-                }
+            stage("build") {
+                parallel parallelJobs
             }
         }
     }
