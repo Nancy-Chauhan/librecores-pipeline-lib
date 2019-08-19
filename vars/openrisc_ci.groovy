@@ -3,20 +3,17 @@ import org.openrisc.ci.Pipeline
 def buildStage(openRiscPipeline, job) {
     return {
         stage("${job.get('name')}") {
-            steps {
-                script {
-                    openRiscPipeline.dockerRun(
-                            job.get('name'),
-                            job.get('sim', ''),
-                            job.get('pipeline', ''),
-                            job.get('expectedFailures', ''),
-                            job.get('extraCoreArgs', '')
-                    )
-                }
-            }
+            openRiscPipeline.runBuild(
+                    job.get('name'),
+                    job.get('sim', ''),
+                    job.get('pipeline', ''),
+                    job.get('expectedFailures', ''),
+                    job.get('extraCoreArgs', '')
+            )
         }
     }
 }
+
 
 def call(jobs) {
     def openRiscPipeline = new Pipeline(steps)
