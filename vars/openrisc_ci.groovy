@@ -21,7 +21,7 @@ def buildStage(openRiscPipeline, job) {
 def call(jobs) {
     def openRiscPipeline = new Pipeline(steps)
 
-    parallelJobs = jobs.collectEntries {
+    def parallelJobs = jobs.collectEntries {
         ["${it.name}": buildStage(openRiscPipeline, it)]
     }
 
