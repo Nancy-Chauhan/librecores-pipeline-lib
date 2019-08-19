@@ -1,6 +1,9 @@
 package org.openrisc.ci
 
 class Pipeline {
+    static final DOCKER_IMAGE = 'librecores/librecores-ci-openrisc'
+    static final COMMAND = "/src/.travis/test.sh"
+
 
     def steps
 
@@ -9,27 +12,19 @@ class Pipeline {
     }
 
     // This method pulls standard dockerimage for openrisc related projects .
-    def dockerPull() {
+    def initialize() {
         steps.sh 'docker pull librecores/librecores-ci-openrisc'
         steps.sh 'docker images'
     }
 
-    def dockerRun(job, sim = '', pipeline = '', expectedFailures = '', extraCoreArgs = '') {
-//        stage(test) {
-//            environment {
-//                JOB = job
-//                SIM = sim
-//                PIPELINE = pipeline
-//                EXPECTED_FAILURES = expectedFailures
-//                EXTRA_CORE_ARGS = extraCoreArgs
-//            }
+    def runJob(job, sim = '', pipeline = '', expectedFailures = '', extraCoreArgs = '') {
+
         def envVars = "-e \"JOB=${job}\" " +
                 "-e \"SIM=${sim}\" " +
                 "-e \"PIPELINE=${pipeline}\"" +
                 " -e \"EXPECTED_FAILURES=${expectedFailures}\" " +
                 "-e \"EXTRA_CORE_ARGS=${extraCoreArgs}\""
-        def image = 'librecores/librecores-ci-openrisc'
-        def command = "/src/.travis/test.sh"
-        steps.sh "docker run --rm -v \$(pwd):/src ${envVars} ${image} ${command}"
+
+        steps.sh "docker run --rm -v \$(pwd):/src ${envVars} ${DOCKER_IMAGE} ${COMMAND}"
     }
 }
