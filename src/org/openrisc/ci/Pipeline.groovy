@@ -14,7 +14,7 @@ class Pipeline {
         steps.sh 'docker images'
     }
 
-    def dockerRun(test, job, sim = '', pipeline = '', expectedFailures = '', extraCoreArgs = '') {
+    def dockerRun(job, sim = '', pipeline = '', expectedFailures = '', extraCoreArgs = '') {
 //        stage(test) {
 //            environment {
 //                JOB = job
