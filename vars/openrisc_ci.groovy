@@ -37,8 +37,10 @@ def call(jobs) {
             }
 
             stage("build") {
-                script {
-                    parallel parallelJobs
+                steps {
+                    script {
+                        parallel parallelJobs
+                    }
                 }
             }
         }
