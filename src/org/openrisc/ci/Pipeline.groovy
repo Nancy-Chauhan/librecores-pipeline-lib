@@ -15,7 +15,7 @@ class Pipeline {
     }
 
     def dockerRun(test, job, sim = '', pipeline = '', expectedFailures = '', extraCoreArgs = '') {
-        stage(test) {
+//        stage(test) {
 //            environment {
 //                JOB = job
 //                SIM = sim
@@ -23,16 +23,13 @@ class Pipeline {
 //                EXPECTED_FAILURES = expectedFailures
 //                EXTRA_CORE_ARGS = extraCoreArgs
 //            }
-            envVars = "-e \"JOB=${job}\" " +
-                    "-e \"SIM=${sim}\" " +
-                    "-e \"PIPELINE=${pipeline}\"" +
-                    " -e \"EXPECTED_FAILURES=${expectedFailures}\" " +
-                    "-e \"EXTRA_CORE_ARGS=${extraCoreArgs}\""
-            image = 'librecores/librecores-ci-openrisc'
-            def command = "/src/.travis/test.sh"
-            steps {
-                steps.sh "docker run --rm -v \$(pwd):/src ${envVars} ${image} ${command}"
-            }
-        }
+        def envVars = "-e \"JOB=${job}\" " +
+                "-e \"SIM=${sim}\" " +
+                "-e \"PIPELINE=${pipeline}\"" +
+                " -e \"EXPECTED_FAILURES=${expectedFailures}\" " +
+                "-e \"EXTRA_CORE_ARGS=${extraCoreArgs}\""
+        def image = 'librecores/librecores-ci-openrisc'
+        def command = "/src/.travis/test.sh"
+        steps.sh "docker run --rm -v \$(pwd):/src ${envVars} ${image} ${command}"
     }
 }
