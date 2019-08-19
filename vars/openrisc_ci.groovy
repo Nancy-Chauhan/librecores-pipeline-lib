@@ -22,7 +22,7 @@ def call(jobs) {
     def openRiscPipeline = new Pipeline(steps)
 
     parallelJobs = jobs.collectEntries {
-        [it.name: buildStage(openRiscPipeline, it)]
+        [ "${it.name}": buildStage(openRiscPipeline, it)]
     }
 
     pipeline {
