@@ -1,25 +1,43 @@
-import org.openrisc.ci.Pipeline
+#!/usr/bin/env groovy
 
-def buildStage(openRiscPipeline, job) {
+/**
+ * Builds a parallel job
+ * @param jobConfig
+ * @return
+ */
+def buildStage(jobConfig) {
+    final String DOCKER_IMAGE = 'librecores/librecores-ci-openrisc'
+    final COMMAND = "/src/.travis/test.sh"
+
+    def job = jobConfig.get('name')
+
+    def sim = jobConfig.get('sim', '')
+    def pipeline = jobConfig.get('pipeline', '')
+    def expectedFailures = jobConfig.get('expectedFailures', '')
+    def extraCoreArgs = jobConfig.get('extraCoreArgs', '')
+
+    def envVars = "-e \"JOB=${job}\" " +
+            "-e \"SIM=${sim}\" " +
+            "-e \"PIPELINE=${pipeline}\"" +
+            " -e \"EXPECTED_FAILURES=${expectedFailures}\" " +
+            "-e \"EXTRA_CORE_ARGS=${extraCoreArgs}\""
+
     return {
-        stage("${job.get('name')}") {
-            openRiscPipeline.runBuild(
-                    job.get('name'),
-                    job.get('sim', ''),
-                    job.get('pipeline', ''),
-                    job.get('expectedFailures', ''),
-                    job.get('extraCoreArgs', '')
-            )
+        stage("${job}") {
+            sh "docker run --rm -v \$(pwd):/src ${envVars} ${DOCKER_IMAGE} ${COMMAND}"
         }
     }
 }
 
-
+/**
+ * Pipeline for OpenRISC projects
+ * @param jobs
+ * @return
+ */
 def call(jobs) {
-    def openRiscPipeline = new Pipeline(steps)
 
     def parallelJobs = jobs.collectEntries {
-        ["${it.name}": buildStage(openRiscPipeline, it)]
+        ["${it.name}": buildStage(it)]
     }
 
     pipeline {
@@ -27,9 +45,8 @@ def call(jobs) {
         stages {
             stage("pre-build") {
                 steps {
-                    script {
-                        openRiscPipeline.initialize()
-                    }
+                    sh 'docker pull librecores/librecores-ci-openrisc'
+                    sh 'docker images'
                 }
             }
 
