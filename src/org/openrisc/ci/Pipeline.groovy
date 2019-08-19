@@ -1,9 +1,5 @@
 package org.openrisc.ci
 
-def shellExecute(command) {
-    sh command
-}
-
 class Pipeline {
 
     def steps
@@ -12,11 +8,11 @@ class Pipeline {
         this.steps = steps
     }
 
-// This method pulls standard dockerimage for openrisc related projects . 
+    // This method pulls standard dockerimage for openrisc related projects .
     def dockerPull(){
-        shellExecute('docker pull librecores/librecores-ci-openrisc')
-        shellExecute('docker images')
+        steps.sh 'docker pull librecores/librecores-ci-openrisc'
+        steps.sh 'docker images'
     }
 
-// This method runs or1k-tests against various enviroment variable
+    // This method runs or1k-tests against various enviroment variable
 }
