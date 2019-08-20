@@ -9,8 +9,8 @@ def buildStage(jobConfig) {
     final String DOCKER_IMAGE = 'librecores/librecores-ci-openrisc'
     final COMMAND = "/src/.travis/test.sh"
 
-    def job = jobConfig.get('name')
-
+    def name = jobConfig.get('name')
+    def job = jobConfig.get('job')
     def sim = jobConfig.get('sim', '')
     def pipeline = jobConfig.get('pipeline', '')
     def expectedFailures = jobConfig.get('expectedFailures', '')
@@ -23,7 +23,7 @@ def buildStage(jobConfig) {
             "-e \"EXTRA_CORE_ARGS=${extraCoreArgs}\""
 
     return {
-        stage("${job}") {
+        stage("${name}") {
             sh "docker run --rm -v \$(pwd):/src ${envVars} ${DOCKER_IMAGE} ${COMMAND}"
         }
     }
