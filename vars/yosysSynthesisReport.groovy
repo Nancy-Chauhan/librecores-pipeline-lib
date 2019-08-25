@@ -16,7 +16,7 @@ def call(@DelegatesTo(strategy = Closure.DELEGATE_ONLY, value = YosysJobSpec) Cl
             target jobSpec.target
         }
 
-        shell "/test-scripts/extract-yosys-stats.py < \"${logPath}\""
+        shell "/test-scripts/extract-yosys-stats.py < \"${jobSpec.logPath}\""
 
     }
 
