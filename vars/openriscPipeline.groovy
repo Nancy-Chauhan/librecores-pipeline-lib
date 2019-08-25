@@ -63,6 +63,13 @@ def call(@DelegatesTo(strategy = Closure.DELEGATE_ONLY, value = PipelineSpec) Cl
                     }
                 }
             }
+
+            stage("Yosys Synthesis resource usage statistics parsing and publishing "){
+                steps{
+                    def yosysmethod = load("yosysSynthesisReport.groovy")
+                    yosysmethod.yosysSynthesisReport("mor1kx",'synth','build/mor1kx_5.0-r3/synth-icestorm/yosys.log')
+                }
+            }
         }
     }
 }
