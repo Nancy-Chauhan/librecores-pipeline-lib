@@ -72,3 +72,35 @@ openriscPipeline {
         }
 }
 ```
+### fusesoc
+
+Builds a step for a generic FuseSoC invocation.
+
+- Chooses a base docker image with FuseSoC
+- Adds library to FuseSoC
+- Runs FuseSoC step
+- Runs arbitrary shell commands in this step
+
+#### Example
+
+```groovy
+@Library('librecoresci') _
+
+pipeline {
+    stages {
+        stage('example-fusesoc-step') {
+            fusesoc {
+                image 'librecores/librecores-ci:0.5.0'
+                library 'some_core', '/src'
+        
+                run('some_core') {
+                    target 'fusesoc_target'
+                }
+        
+                shell "echo 'Additional steps on shell'"
+            }
+        }
+    }
+}
+```
+## yosy

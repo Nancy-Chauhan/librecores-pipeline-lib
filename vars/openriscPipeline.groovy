@@ -31,9 +31,6 @@ def buildStage(jobConfig) {
     }
 }
 
-def yosyscommand (String core, String targetName, String yosysLogPath) {
-    return yosysSynthesisReport(core,targetName,yosysLogPath)
-}
 /**
  * Pipeline for OpenRISC projects
  * @param jobs
@@ -47,10 +44,6 @@ def call(@DelegatesTo(strategy = Closure.DELEGATE_ONLY, value = PipelineSpec) Cl
 
     def parallelJobs = pipelineSpec.jobConfigs.collectEntries {
         ["${it.name}": buildStage(it)]
-    }
-
-    def yosys() {
-        return yosyscommand (String core, String targetName, String yosysLogPath)
     }
 
     pipeline {
@@ -71,9 +64,14 @@ def call(@DelegatesTo(strategy = Closure.DELEGATE_ONLY, value = PipelineSpec) Cl
                 }
             }
 
-            stage("Yosys Synthesis resource usage statistics parsing and publishing "){
+            stage("Yosys Synthesis resource usage statistics parsing and publishing ") {
+                when {
+                    expression {
+                        pipelineSpec.yosysJobSpec != null
+                    }
+                }
                 steps {
-                    yosys()
+                    yosysSynthesisReport pipelineSpec.yosysJobSpec
                 }
             }
         }
